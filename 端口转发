@@ -1,0 +1,86 @@
+modprobe ip_nat_pptp
+echo 1 > /proc/sys/net/ipv4/ip_forward
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+
+INT=eth0
+IP=38.106.22.29
+JPIP=45.63.91.49
+CNIP=38.106.22.29
+
+iptables -t nat -F PREROUTING
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p udp --dport 4500 -j DNAT --to-destination $JPIP:4500
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p udp --dport 500 -j DNAT --to-destination $JPIP:500
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p udp --dport 1701 -j DNAT --to-destination $JPIP:1701
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 443 -j DNAT --to-destination $JPIP:443
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 444 -j DNAT --to-destination $JPIP:444
+
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 992 -j DNAT --to-destination $JPIP:992
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 1194 -j DNAT --to-destination $JPIP:1194
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 5555 -j DNAT --to-destination $JPIP:5555
+iptables -t nat -A PREROUTING -i $INT --dst $IP -p tcp --dport 1723 -j DNAT --to-destination $JPIP:1723
+iptables -t nat -A PREROUTING -i $INT --dst $IP  -p gre -j DNAT --to-destination $JPIP
+
+iptables -t nat -F POSTROUTING
+iptables -t nat -A POSTROUTING -p udp -d $JPIP --dport 4500 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p udp -d $JPIP --dport 500 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p udp -d $JPIP --dport 1701 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 443 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 444 -j SNAT --to-source $CNIP
+
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 992 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 1194 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 5555 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p tcp -d $JPIP --dport 1723 -j SNAT --to-source $CNIP
+iptables -t nat -A POSTROUTING -p gre -d $JPIP  -j SNAT --to-source $CNIP
+
+#us server
+JPIP=45.63.91.49
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 61081:61120 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 61081:61120 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 61081:61120 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 61081:61120 -j SNAT --to-source $CNIP
+
+#us server
+JPIP=45.63.91.49
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 11081:11120 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 11081:11120 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 11081:11120 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 11081:11120 -j SNAT --to-source $CNIP
+
+# jp server
+JPIP=45.63.123.139
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 21081:21120 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 21081:21120 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 21081:21120 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 21081:21120 -j SNAT --to-source $CNIP
+
+#kr  server
+JPIP=202.168.154.111
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 31081:31120 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 31081:31120 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 31081:31120 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 31081:31120 -j SNAT --to-source $CNIP
+
+# us server
+INT=eth0
+IP=38.106.22.29
+JPIP=45.63.91.49
+CNIP=38.106.22.29
+
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 7001:7010 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 7001:7010 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 7001:7010 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 7001:7010 -j SNAT --to-source $CNIP
+
+
+
+
+INT=eth0
+IP=172.21.4.152
+JPIP=45.63.91.49
+CNIP=172.21.4.152
+
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p udp --dport 7001:7010 -j DNAT --to-destination $JPIP
+iptables -t nat -I PREROUTING -i $INT --dst $IP -p tcp --dport 7001:7010 -j DNAT --to-destination $JPIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p udp  --dport 7001:7010 -j SNAT --to-source $CNIP
+iptables -t nat -I POSTROUTING --dst $JPIP   -p tcp  --dport 7001:7010 -j SNAT --to-source $CNIP
