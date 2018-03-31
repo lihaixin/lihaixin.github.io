@@ -17,9 +17,10 @@
 	dpkg --get-selections | grep linux-image
 	apt-cache search linux-image
 	apt-get install lrzsz iftop mtr curl
-	apt-get purge linux-image-4.4.0-*[0-9]*-generic linux-image-extra-4.4.0-*[0-9]*-generic -y
-	apt-get install linux-image-4.4.0-47-generic linux-image-extra-4.4.0-47-generic
-	wget  http://www.gigsgigscloud.com/cn/downloads/serverspeeder.sh&& bash serverspeeder.sh
+
+apt-get purge linux-image-4.4.0-*[0-9]*-generic linux-image-extra-4.4.0-*[0-9]*-generic -y
+apt-get install linux-image-4.4.0-47-generic linux-image-extra-4.4.0-47-generic
+wget  http://www.gigsgigscloud.com/cn/downloads/serverspeeder.sh&& bash serverspeeder.sh
 
 
 ## 手动安装低版本docker
